@@ -1,8 +1,11 @@
 use anchor_lang::prelude::*;
 pub use states::AmmConfig;
-declare_id!("C6TCz92bpYjWgty9mwrAoNh7u6RSdmyBRB4dMoBGgMrA");
 
 pub mod states;
+pub mod instructions;
+pub mod error;
+declare_id!("C6TCz92bpYjWgty9mwrAoNh7u6RSdmyBRB4dMoBGgMrA");
+pub const ADMIN: Pubkey = pubkey!("C6TCz92bpYjWgty9mwrAoNh7u6RSdmyBRB4dMoBGgMrA");
 
 #[program]
 pub mod veerbal_cpmm {
