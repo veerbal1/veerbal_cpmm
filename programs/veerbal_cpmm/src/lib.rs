@@ -1,9 +1,10 @@
 use anchor_lang::prelude::*;
 pub use states::AmmConfig;
 
-pub mod states;
-pub mod instructions;
+pub mod constants;
 pub mod error;
+pub mod instructions;
+pub mod states;
 declare_id!("C6TCz92bpYjWgty9mwrAoNh7u6RSdmyBRB4dMoBGgMrA");
 pub const ADMIN: Pubkey = pubkey!("C6TCz92bpYjWgty9mwrAoNh7u6RSdmyBRB4dMoBGgMrA");
 
@@ -33,13 +34,13 @@ fn calculate_deposit_amounts(
     let token_0_amount: u64 = ((vault_0_amount as u128)
         .checked_mul(lp_tokens_to_mint as u128)
         .unwrap())
-        .checked_div(lp_supply as u128)
-        .unwrap() as u64;
+    .checked_div(lp_supply as u128)
+    .unwrap() as u64;
     let token_1_amount: u64 = ((vault_1_amount as u128)
         .checked_mul(lp_tokens_to_mint as u128)
         .unwrap())
-        .checked_div(lp_supply as u128)
-        .unwrap() as u64;
+    .checked_div(lp_supply as u128)
+    .unwrap() as u64;
 
     (token_0_amount, token_1_amount)
 }

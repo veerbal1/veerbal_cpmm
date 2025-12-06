@@ -1,7 +1,7 @@
 use crate::{error::ErrorCode, AmmConfig};
 use anchor_lang::prelude::*;
 
-const CONFIG_SEED: &[u8] = b"AMM_CONFIG";
+pub const CONFIG_SEED: &[u8] = b"AMM_CONFIG";
 
 #[derive(Accounts)]
 #[instruction(index: u8)]

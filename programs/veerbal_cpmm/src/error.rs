@@ -7,4 +7,10 @@ pub enum ErrorCode {
 
     #[msg("FEE_EXCEED_HUNDRED_PERCENTAGE")]
     FeeExceedHundredPercentage,
+
+    #[msg("Pool Creation disabled")]
+    PoolCreationDisabled,
+
+    #[msg("Insufficient Tokens to Mint")]
+    InsufficientTokensToMint,
 }
