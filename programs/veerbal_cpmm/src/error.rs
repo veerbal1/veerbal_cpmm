@@ -33,5 +33,14 @@ pub enum ErrorCode {
     MaximumAmountExceed,
 
     #[msg("Math overflow")]
-    MathOverflow
+    MathOverflow,
+
+    #[msg("Withdraws are current disabled for this pool")]
+    WithdrawDisabled,
+
+    #[msg("SlippageExceeded")]
+    SlippageExceeded,
+
+    #[msg("ZeroTradingTokens")]
+    ZeroTradingTokens
 }
