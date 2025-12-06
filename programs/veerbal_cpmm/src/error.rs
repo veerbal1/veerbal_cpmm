@@ -16,4 +16,22 @@ pub enum ErrorCode {
 
     #[msg("Invalid Vault")]
     InvalidVault,
+
+    #[msg("Deposits are currently disabled for this pool")]
+    DepositDisabled,
+
+    #[msg("LP amount should be greater than 0")]
+    InvalidLPAmount,
+
+    #[msg("Token Amount should be greater than 0")]
+    InvalidTokenAmount,
+
+    #[msg("Pool not initialized yet")]
+    PoolNotInitialized,
+
+    #[msg("Maximum amount exceed")]
+    MaximumAmountExceed,
+
+    #[msg("Math overflow")]
+    MathOverflow
 }
