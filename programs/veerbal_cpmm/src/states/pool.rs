@@ -1,5 +1,11 @@
 use anchor_lang::prelude::*;
 
+pub enum PoolStatusBitIndex {
+    Deposit,
+    Withdraw,
+    Swap,
+}
+
 #[account]
 #[derive(InitSpace)]
 pub struct PoolState {
@@ -59,4 +65,9 @@ pub struct PoolState {
 
 impl PoolState {
     pub const LEN: usize = 8 + Self::INIT_SPACE;
+
+    pub fn is_enabled(&self, action: PoolStatusBitIndex) -> bool {
+        let mask = (1 as u8) << (action as u8);
+        self.status & mask == 0
+    }
 }
