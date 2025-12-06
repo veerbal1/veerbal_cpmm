@@ -17,7 +17,7 @@ pub struct CreateAmmConfig<'info> {
 
 pub fn create_amm_config(
     ctx: Context<CreateAmmConfig>,
-    index: u8,
+    index: u16,
     trade_fee_rate: u64,
     creator_fee_rate: u64,
     protocol_fee_rate: u64,

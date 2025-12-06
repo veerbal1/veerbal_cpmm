@@ -1,5 +1,5 @@
 use anchor_lang::{
-    prelude::{system_instruction::transfer, *},
+    prelude::{*},
     system_program,
 };
 use anchor_spl::{
@@ -154,6 +154,11 @@ pub fn initialize(
 
     // Config
     pool_state.auth_bump = ctx.bumps.authority;
+    pool_state.bump = ctx.bumps.pool_state;
+    pool_state.token_0_bump = ctx.bumps.token_0_vault;
+    pool_state.token_1_bump = ctx.bumps.token_1_vault;
+    pool_state.mint_bump = ctx.bumps.lp_mint;
+
     pool_state.status = 0; // all operations enabled
     pool_state.open_time = open_time;
     pool_state.recent_epoch = Clock::get()?.epoch;

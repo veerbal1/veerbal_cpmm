@@ -23,7 +23,15 @@ pub struct PoolState {
 
     pub lp_supply: u64,
 
+    pub bump: u8,
+
     pub auth_bump: u8,
+
+    pub token_0_bump: u8,
+
+    pub token_1_bump: u8,
+
+    pub mint_bump: u8,
 
     pub status: u8,
 

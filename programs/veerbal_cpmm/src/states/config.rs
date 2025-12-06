@@ -5,7 +5,7 @@ use anchor_lang::prelude::*;
 pub struct AmmConfig {
     pub bump: u8,
 
-    pub index: u8,
+    pub index: u16,
 
     pub trade_fee_rate: u64,
     pub protocol_fee_rate: u64,

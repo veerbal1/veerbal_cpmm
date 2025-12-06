@@ -13,4 +13,7 @@ pub enum ErrorCode {
 
     #[msg("Insufficient Tokens to Mint")]
     InsufficientTokensToMint,
+
+    #[msg("Invalid Vault")]
+    InvalidVault,
 }
