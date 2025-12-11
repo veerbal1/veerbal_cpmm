@@ -7,7 +7,7 @@ use anchor_spl::token::{self, Burn, Mint, Token, TokenAccount, Transfer};
 
 use crate::{
     instructions::CONFIG_SEED,
-    states::{pool, PoolState, PoolStatusBitIndex},
+    states::{PoolState, PoolStatusBitIndex},
     AmmConfig,
 };
 
@@ -59,21 +59,18 @@ pub fn withdraw(
     let pool_state = &mut ctx.accounts.pool_state;
 
     // 1.  VALIDATION
-    // TODO: Check withdraw enabled
     require!(
         pool_state.is_enabled(PoolStatusBitIndex::Withdraw),
         ErrorCode::WithdrawDisabled
     );
-    // TODO: Check lp_amount > 0
+
     require!(lp_amount > 0, ErrorCode::InvalidLPAmount);
 
-    // TODO: Check pool has liquidity
     require!(pool_state.lp_supply > 0, ErrorCode::PoolNotInitialized);
 
     // 2.  CALCULATE TOKEN AMOUNTS (round DOWN!)
     let token_0_vault = &ctx.accounts.token_0_vault;
     let token_1_vault = &ctx.accounts.token_1_vault;
-    // TODO: token_0_amount = ...
     let token_0_amount = (((lp_amount as u128)
         .checked_mul(token_0_vault.amount as u128)
         .ok_or(ErrorCode::MathOverflow)?)
@@ -81,7 +78,6 @@ pub fn withdraw(
     .ok_or(ErrorCode::MathOverflow)?)
     .try_into()
     .map_err(|_| ErrorCode::MathOverflow)?;
-    // TODO: token_1_amount = ...
     let token_1_amount = (((lp_amount as u128)
         .checked_mul(token_1_vault.amount as u128)
         .ok_or(ErrorCode::MathOverflow)?)
@@ -94,7 +90,6 @@ pub fn withdraw(
     require!(token_1_amount > 0, ErrorCode::ZeroTradingTokens);
 
     // 3. SLIPPAGE CHECK
-    // TODO: >= minimum amounts
     require!(
         token_0_amount >= minimum_token_0_amount,
         ErrorCode::SlippageExceeded
@@ -106,13 +101,11 @@ pub fn withdraw(
     );
 
     // 4.  EFFECTS FIRST (state changes before external calls!)
-    // TODO: Update pool. lp_supply (subtract)
     pool_state.lp_supply = pool_state
         .lp_supply
         .checked_sub(lp_amount)
         .ok_or(ErrorCode::MathOverflow)?;
 
-    // TODO: Burn LP tokens from user (CPI)
     let cpi_accounts = Burn {
         mint: ctx.accounts.lp_mint.to_account_info(),
         from: ctx.accounts.signer_lp.to_account_info(),
@@ -124,7 +117,6 @@ pub fn withdraw(
     token::burn(cpi_context, lp_amount)?;
 
     // 5.  INTERACTIONS LAST
-    // TODO: Transfer token_0 from vault to user (CPI with signer seeds)
     let cpi_accounts = Transfer {
         from: ctx.accounts.token_0_vault.to_account_info(),
         to: ctx.accounts.signer_token_0.to_account_info(),
@@ -138,7 +130,6 @@ pub fn withdraw(
     let cpi_ctx = CpiContext::new_with_signer(token_program, cpi_accounts, signer_seeds);
     token::transfer(cpi_ctx, token_0_amount)?;
 
-    // TODO: Transfer token_1 from vault to user (CPI with signer seeds)
     let cpi_accounts = Transfer {
         from: ctx.accounts.token_1_vault.to_account_info(),
         to: ctx.accounts.signer_token_1.to_account_info(),

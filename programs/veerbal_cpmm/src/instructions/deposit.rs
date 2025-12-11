@@ -75,7 +75,6 @@ pub fn deposit(
     // Pool must be initialized (lp_supply > 0 from initialize)
     require!(pool_state.lp_supply > 0, ErrorCode::PoolNotInitialized);
 
-    // TODO: Step 2 — Calculate required tokens for requested lp_amount
     let lp_supply = pool_state.lp_supply;
     let token_0_vault = &ctx.accounts.token_0_vault;
     let token_1_vault = &ctx.accounts.token_1_vault;
@@ -104,7 +103,6 @@ pub fn deposit(
         ErrorCode::MaximumAmountExceed
     );
 
-    // TODO: Step 3 — Transfer tokens from user → vaults
     let accounts_0 = Transfer {
         from: ctx.accounts.signer_token_0.to_account_info(),
         to: ctx.accounts.token_0_vault.to_account_info(),
@@ -125,7 +123,6 @@ pub fn deposit(
     let cpi = CpiContext::new(token_program, accounts_1);
     token::transfer(cpi, token_1_amount)?;
 
-    // TODO: Step 4 — Mint LP tokens to user
     let mint_accounts = MintTo {
         mint: ctx.accounts.lp_mint.to_account_info(),
         to: ctx.accounts.signer_lp.to_account_info(),
@@ -136,14 +133,13 @@ pub fn deposit(
     let signer_seeds = &[&seeds[..]];
     let token_program = ctx.accounts.token_program.to_account_info();
 
-    let cpi_ctx = CpiContext::new_with_signer(token_program, mint_accounts, signer_seeds);
-    token::mint_to(cpi_ctx, lp_amount)?;
-
-    // TODO: Step 5 — Update lp_supply
     pool_state.lp_supply = pool_state
         .lp_supply
         .checked_add(lp_amount)
         .ok_or(ErrorCode::MathOverflow)?;
+
+    let cpi_ctx = CpiContext::new_with_signer(token_program, mint_accounts, signer_seeds);
+    token::mint_to(cpi_ctx, lp_amount)?;
 
     Ok(())
 }
