@@ -1,0 +1,24 @@
+1. VALIDATE
+   - Check swap enabled
+   - Check block_timestamp >= open_time
+2. CALCULATE TRANSFER FEE (Token2022 stuff - skip for you)
+   - actual_amount_in = amount_in - transfer_fee
+3. GET SWAP PARAMS
+   - Determine trade direction (ZeroForOne or OneForZero)
+   - Get vault amounts
+4. VERIFY CONSTANT BEFORE
+   - constant_before = input_vault * output_vault
+5. CALCULATE SWAP (with fees!)
+   - Deduct trade_fee from input
+   - Apply x*y=k formula
+   - Split fees (protocol, fund, creator)
+6. VERIFY CONSTANT AFTER >= CONSTANT BEFORE
+   - CRITICAL: Pool value must NEVER decrease!
+7. SLIPPAGE CHECK
+   - output_received >= minimum_amount_out
+8. UPDATE FEE STATE
+   - pool_state.update_fees(...)
+9. EMIT SWAP EVENT
+10. TRANSFER IN (user → vault)
+11. TRANSFER OUT (vault → user with signer seeds)
+12. UPDATE ORACLE (observation_state)

@@ -44,6 +44,7 @@ pub struct Withdraw<'info> {
     pub amm_config: Account<'info, AmmConfig>,
 
     // Authority pda is needed to sign vault transactions
+    /// CHECK: This is not dangerous because we don't read or write from this account
     #[account(seeds=[AUTH_SEED], bump = pool_state.auth_bump)]
     pub authority: UncheckedAccount<'info>,
 

@@ -37,6 +37,7 @@ pub struct Initialize<'info> {
     pub token_0_mint: Account<'info, Mint>,
     pub token_1_mint: Account<'info, Mint>,
 
+    /// CHECK: This is not dangerous because we don't read or write from this account
     #[account(seeds = [AUTH_SEED], bump)]
     pub authority: UncheckedAccount<'info>,
 
@@ -59,6 +60,7 @@ pub struct Initialize<'info> {
     #[account(init, associated_token::mint = lp_mint, associated_token::authority = creator, payer = creator)]
     pub creator_lp: Account<'info, TokenAccount>,
 
+    /// CHECK: This is not dangerous because we don't read or write from this account
     #[account(mut)]
     pub fee_receiver: UncheckedAccount<'info>,
 
