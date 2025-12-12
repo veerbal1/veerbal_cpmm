@@ -45,7 +45,7 @@ pub fn create_amm_config(
     amm_config.fund_fee_rate = fund_fee_rate;
     amm_config.trade_fee_rate = trade_fee_rate;
     amm_config.protocol_owner = ctx.accounts.owner.key();
-    amm_config.fund_owner = fund_owner;
+    amm_config.fund_owner = ctx.accounts.owner.key();
 
     amm_config.disable_create_pool = false;
 
