@@ -69,6 +69,11 @@ pub fn deposit(
         ErrorCode::DepositDisabled
     );
 
+    require!(
+        pool_state.open_time < Clock::get()?.unix_timestamp as u64,
+        ErrorCode::DepositDisabled
+    );
+
     require!(lp_amount > 0, ErrorCode::InvalidLPAmount);
     require!(maximum_token_0_amount > 0, ErrorCode::InvalidTokenAmount);
     require!(maximum_token_1_amount > 0, ErrorCode::InvalidTokenAmount);
