@@ -47,8 +47,6 @@ pub struct PoolState {
 
     pub recent_epoch: u64,
 
-    pub observation_key: Pubkey,
-
     pub protocol_token_0_fee: u64,
     pub protocol_token_1_fee: u64,
 
