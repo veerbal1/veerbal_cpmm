@@ -18,30 +18,30 @@ pub struct Withdraw<'info> {
 
     // Above accounts dependent on pool state for updating supply, need pool state address for PDA derivation etc.
     #[account(mut, seeds=[POOL_SEED, amm_config.key().as_ref(), pool_state.token_0_mint.key().as_ref(), pool_state.token_1_mint.key().as_ref()], bump = pool_state.bump)]
-    pub pool_state: Account<'info, PoolState>,
+    pub pool_state: Box<Account<'info, PoolState>>,
 
     // User will provide these accounts
     #[account(mut, token::mint = pool_state.token_0_mint, token::authority = signer)]
-    pub signer_token_0: Account<'info, TokenAccount>,
+    pub signer_token_0: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, token::mint = pool_state.token_1_mint, token::authority = signer)]
-    pub signer_token_1: Account<'info, TokenAccount>,
+    pub signer_token_1: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, constraint = token_0_vault.key() == pool_state.token_0_vault @ ErrorCode::InvalidVault, token::mint = pool_state.token_0_mint, token::authority = authority)]
-    pub token_0_vault: Account<'info, TokenAccount>,
+    pub token_0_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, constraint = token_1_vault.key() == pool_state.token_1_vault @ ErrorCode::InvalidVault, token::mint = pool_state.token_1_mint, token::authority = authority)]
-    pub token_1_vault: Account<'info, TokenAccount>,
+    pub token_1_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, token::mint = lp_mint, token::authority = signer)]
-    pub signer_lp: Account<'info, TokenAccount>,
+    pub signer_lp: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, seeds=[LP_MINT_SEED, pool_state.key().as_ref()], bump = pool_state.mint_bump)]
     pub lp_mint: Account<'info, Mint>,
 
     // pool state dependent upon amm config
     #[account(seeds=[CONFIG_SEED, amm_config.index.to_be_bytes().as_ref()], bump = amm_config.bump)]
-    pub amm_config: Account<'info, AmmConfig>,
+    pub amm_config: Box<Account<'info, AmmConfig>>,
 
     // Authority pda is needed to sign vault transactions
     /// CHECK: This is not dangerous because we don't read or write from this account

@@ -8,20 +8,20 @@ use crate::{
     constants::{AUTH_SEED, LP_MINT_SEED, POOL_SEED, VAULT_SEED},
     error::ErrorCode,
     instructions::CONFIG_SEED,
-    states::{pool, PoolState},
+    states::{PoolState},
     AmmConfig,
 };
 
 #[derive(Accounts)]
 #[instruction(index: u16)]
-pub struct Initialize<'info> {
+pub struct CreatePool<'info> {
     // 1. Who pays and signs?
     #[account(mut)]
     pub creator: Signer<'info>,
 
     // 2. Which config does this pool use?
     #[account(seeds=[CONFIG_SEED,index.to_be_bytes().as_ref()], bump = amm_config.bump)]
-    pub amm_config: Account<'info, AmmConfig>,
+    pub amm_config: Box<Account<'info, AmmConfig>>,
 
     // 3. The pool state we're creating (what seeds?)
     #[account(
@@ -31,7 +31,7 @@ pub struct Initialize<'info> {
         payer = creator, 
         space=PoolState::LEN
     )]
-    pub pool_state: Account<'info, PoolState>,
+    pub pool_state: Box<Account<'info, PoolState>>,
 
     #[account(constraint = token_0_mint.key() < token_1_mint.key())]
     pub token_0_mint: Account<'info, Mint>,
@@ -45,20 +45,20 @@ pub struct Initialize<'info> {
     pub lp_mint: Account<'info, Mint>,
 
     #[account(init, seeds=[VAULT_SEED, pool_state.key().as_ref(), token_0_mint.key().as_ref()], bump, payer = creator, token::mint = token_0_mint, token::authority = authority)]
-    pub token_0_vault: Account<'info, TokenAccount>,
+    pub token_0_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(init, seeds=[VAULT_SEED, pool_state.key().as_ref(), token_1_mint.key().as_ref()], bump, payer = creator, token::mint = token_1_mint, token::authority = authority)]
-    pub token_1_vault: Account<'info, TokenAccount>,
+    pub token_1_vault: Box<Account<'info, TokenAccount>>,
 
     // Creator
     #[account(mut, token::mint = token_0_mint, token::authority = creator)]
-    pub creator_token_0: Account<'info, TokenAccount>,
+    pub creator_token_0: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, token::mint = token_1_mint, token::authority = creator)]
-    pub creator_token_1: Account<'info, TokenAccount>,
+    pub creator_token_1: Box<Account<'info, TokenAccount>>,
 
     #[account(init, associated_token::mint = lp_mint, associated_token::authority = creator, payer = creator)]
-    pub creator_lp: Account<'info, TokenAccount>,
+    pub creator_lp: Box<Account<'info, TokenAccount>>,
 
     /// CHECK: Normal Sol Wallet Account
     #[account(mut, address = amm_config.fund_owner @ ErrorCode::InvalidFeeReceiver)]
@@ -69,8 +69,8 @@ pub struct Initialize<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn initialize(
-    ctx: Context<Initialize>,
+pub fn create_pool(
+    ctx: Context<CreatePool>,
     _index: u16,
     init_amount_0: u64,
     init_amount_1: u64,

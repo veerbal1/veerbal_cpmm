@@ -10,7 +10,7 @@ pub struct CreateAmmConfig<'info> {
     pub owner: Signer<'info>,
 
     #[account(init, seeds=[CONFIG_SEED, index.to_be_bytes().as_ref()], bump, payer = owner, space = AmmConfig::LEN)]
-    pub amm_config: Account<'info, AmmConfig>,
+    pub amm_config: Box<Account<'info, AmmConfig>>,
 
     pub system_program: Program<'info, System>,
 }
@@ -23,7 +23,6 @@ pub fn create_amm_config(
     protocol_fee_rate: u64,
     fund_fee_rate: u64,
     create_pool_fee: u64,
-    fund_owner: Pubkey,
 ) -> Result<()> {
     require!(
         trade_fee_rate + creator_fee_rate < 1_000_000,

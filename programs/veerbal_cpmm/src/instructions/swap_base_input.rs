@@ -15,10 +15,10 @@ pub struct Swap<'info> {
     pub signer: Signer<'info>,
 
     #[account(mut, seeds=[POOL_SEED, pool_state.amm_config.key().as_ref(), pool_state.token_0_mint.key().as_ref(), pool_state.token_1_mint.key().as_ref()], bump = pool_state.bump)]
-    pub pool_state: Account<'info, PoolState>,
+    pub pool_state: Box<Account<'info, PoolState>>,
 
     #[account(address = pool_state.amm_config)]
-    pub amm_config: Account<'info, AmmConfig>,
+    pub amm_config: Box<Account<'info, AmmConfig>>,
 
     #[account(address =  input_vault.mint @ ErrorCode::MintMismatch)]
     pub input_token_mint: Account<'info, Mint>,
@@ -27,18 +27,18 @@ pub struct Swap<'info> {
     pub output_token_mint: Account<'info, Mint>,
 
     #[account(mut, constraint = input_vault.key() == pool_state.token_0_vault || input_vault.key() == pool_state.token_1_vault @ ErrorCode::InvalidVault,)]
-    pub input_vault: Account<'info, TokenAccount>,
+    pub input_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut,  constraint = output_vault.key() == pool_state.token_0_vault 
     || output_vault.key() == pool_state.token_1_vault @ ErrorCode::InvalidVault, constraint = output_vault.key() != input_vault.key() @ ErrorCode::SameVault)]
-    pub output_vault: Account<'info, TokenAccount>,
+    pub output_vault: Box<Account<'info, TokenAccount>>,
 
     // User accounts
     #[account(mut, token::mint = input_token_mint, token::authority = signer)]
-    pub input_token_account: Account<'info, TokenAccount>,
+    pub input_token_account: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, token::mint = output_token_mint, token::authority = signer)]
-    pub output_token_account: Account<'info, TokenAccount>,
+    pub output_token_account: Box<Account<'info, TokenAccount>>,
 
     // Authority
     /// CHECK: This is not dangerous because we don't read or write from this account
