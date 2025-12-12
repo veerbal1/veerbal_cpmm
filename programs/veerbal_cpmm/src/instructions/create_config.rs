@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 pub const CONFIG_SEED: &[u8] = b"AMM_CONFIG";
 
 #[derive(Accounts)]
-#[instruction(index: u8)]
+#[instruction(index: u16)]
 pub struct CreateAmmConfig<'info> {
     #[account(mut, address = crate::ADMIN @ ErrorCode::InvalidOwner)]
     pub owner: Signer<'info>,
