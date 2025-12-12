@@ -184,5 +184,7 @@ pub fn swap(ctx: Context<Swap>, amount_in: u64, minimum_amount_out: u64) -> Resu
         signer_seeds,
     );
     token::transfer(cpi_ctx, output_amount)?;
+
+    pool_state.recent_epoch = Clock::get()?.epoch;
     Ok(())
 }

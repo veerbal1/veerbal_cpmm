@@ -154,5 +154,7 @@ pub fn deposit(
     let cpi_ctx = CpiContext::new_with_signer(token_program, mint_accounts, signer_seeds);
     token::mint_to(cpi_ctx, lp_amount)?;
 
+    pool_state.recent_epoch = Clock::get()?.epoch;
+
     Ok(())
 }

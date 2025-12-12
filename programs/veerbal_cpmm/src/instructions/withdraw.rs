@@ -146,5 +146,7 @@ pub fn withdraw(
     let cpi_ctx = CpiContext::new_with_signer(token_program, cpi_accounts, signer_seeds);
     token::transfer(cpi_ctx, token_1_amount)?;
 
+    pool_state.recent_epoch = Clock::get()?.epoch;
+
     Ok(())
 }

@@ -180,5 +180,7 @@ pub fn swap_base_output(
         ),
         amount_out,
     )?;
+
+    pool_state.recent_epoch = Clock::get()?.epoch;
     Ok(())
 }
