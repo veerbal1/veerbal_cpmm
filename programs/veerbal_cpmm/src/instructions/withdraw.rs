@@ -70,17 +70,22 @@ pub fn withdraw(
     require!(pool_state.lp_supply > 0, ErrorCode::PoolNotInitialized);
 
     // 2.  CALCULATE TOKEN AMOUNTS (round DOWN!)
-    let token_0_vault = &ctx.accounts.token_0_vault;
-    let token_1_vault = &ctx.accounts.token_1_vault;
+    // CALCULATE TOKEN AMOUNTS (round DOWN!)
+    let (clean_vault_0, clean_vault_1) = pool_state.vault_amount_without_fee(
+        ctx.accounts.token_0_vault.amount,
+        ctx.accounts.token_1_vault.amount,
+    )?;
+
     let token_0_amount = (((lp_amount as u128)
-        .checked_mul(token_0_vault.amount as u128)
+        .checked_mul(clean_vault_0 as u128)
         .ok_or(ErrorCode::MathOverflow)?)
     .checked_div(pool_state.lp_supply as u128)
     .ok_or(ErrorCode::MathOverflow)?)
     .try_into()
     .map_err(|_| ErrorCode::MathOverflow)?;
+
     let token_1_amount = (((lp_amount as u128)
-        .checked_mul(token_1_vault.amount as u128)
+        .checked_mul(clean_vault_1 as u128)
         .ok_or(ErrorCode::MathOverflow)?)
     .checked_div(pool_state.lp_supply as u128)
     .ok_or(ErrorCode::MathOverflow)?)
