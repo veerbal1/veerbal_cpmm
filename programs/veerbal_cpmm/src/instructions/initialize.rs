@@ -74,11 +74,17 @@ pub fn create_pool(
     _index: u16,
     init_amount_0: u64,
     init_amount_1: u64,
-    open_time: u64,
+    mut open_time: u64,
 ) -> Result<()> {
 
     require!(init_amount_0 > 0, ErrorCode::InvalidTokenAmount);
     require!(init_amount_1 > 0, ErrorCode::InvalidTokenAmount);
+
+    let block_timestamp = Clock::get()?.unix_timestamp as u64;
+
+    if open_time < block_timestamp {
+        open_time = block_timestamp + 1
+    }
 
     let amm_config = &ctx.accounts.amm_config;
     require!(
