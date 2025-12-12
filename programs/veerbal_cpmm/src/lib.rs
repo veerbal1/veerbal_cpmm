@@ -5,6 +5,7 @@ pub mod constants;
 pub mod error;
 pub mod instructions;
 pub mod states;
+pub mod curve;
 declare_id!("C6TCz92bpYjWgty9mwrAoNh7u6RSdmyBRB4dMoBGgMrA");
 pub const ADMIN: Pubkey = pubkey!("C6TCz92bpYjWgty9mwrAoNh7u6RSdmyBRB4dMoBGgMrA");
 

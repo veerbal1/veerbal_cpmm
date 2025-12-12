@@ -1,7 +1,4 @@
-use anchor_lang::{
-    prelude::{*},
-    system_program,
-};
+use anchor_lang::{prelude::*, system_program};
 use anchor_spl::{
     associated_token::AssociatedToken,
     token::{self, Mint, MintTo, Token, TokenAccount, Transfer},

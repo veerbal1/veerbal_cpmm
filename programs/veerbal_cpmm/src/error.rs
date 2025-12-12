@@ -17,6 +17,9 @@ pub enum ErrorCode {
     #[msg("Invalid Vault")]
     InvalidVault,
 
+    #[msg("SameVault")]
+    SameVault,
+
     #[msg("Deposits are currently disabled for this pool")]
     DepositDisabled,
 
@@ -42,5 +45,11 @@ pub enum ErrorCode {
     SlippageExceeded,
 
     #[msg("ZeroTradingTokens")]
-    ZeroTradingTokens
+    ZeroTradingTokens,
+
+    #[msg("Mint Address Mismatch")]
+    MintMismatch,
+
+    #[msg("SwapBlocked")]
+    SwapBlocked,
 }
