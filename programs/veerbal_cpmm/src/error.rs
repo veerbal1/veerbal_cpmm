@@ -52,4 +52,7 @@ pub enum ErrorCode {
 
     #[msg("SwapBlocked")]
     SwapBlocked,
+
+    #[msg("Constant product invariant violated")]
+    ConstantProductInvariant,
 }

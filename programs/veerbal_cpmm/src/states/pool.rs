@@ -1,5 +1,7 @@
 use anchor_lang::prelude::*;
 
+use crate::error::ErrorCode;
+
 pub enum PoolStatusBitIndex {
     Deposit,
     Withdraw,
@@ -69,5 +71,33 @@ impl PoolState {
     pub fn is_enabled(&self, action: PoolStatusBitIndex) -> bool {
         let mask = (1 as u8) << (action as u8);
         self.status & mask == 0
+    }
+
+    pub fn vault_amount_without_fee(
+        &self,
+        vault_0_amount: u64,
+        vault_1_amount: u64,
+    ) -> Result<(u64, u64)> {
+        let total_fees_0 = self
+            .protocol_token_0_fee
+            .checked_add(self.fund_token_0_fee)
+            .ok_or(ErrorCode::MathOverflow)?
+            .checked_add(self.creator_token_0_fee)
+            .ok_or(ErrorCode::MathOverflow)?;
+
+        let total_fees_1 = self
+            .protocol_token_1_fee
+            .checked_add(self.fund_token_1_fee)
+            .ok_or(ErrorCode::MathOverflow)?
+            .checked_add(self.creator_token_1_fee)
+            .ok_or(ErrorCode::MathOverflow)?;
+        Ok((
+            vault_0_amount
+                .checked_sub(total_fees_0)
+                .ok_or(ErrorCode::MathOverflow)?,
+            vault_1_amount
+                .checked_sub(total_fees_1)
+                .ok_or(ErrorCode::MathOverflow)?,
+        ))
     }
 }
