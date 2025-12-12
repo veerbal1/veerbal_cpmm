@@ -13,7 +13,7 @@ use crate::{
 };
 
 #[derive(Accounts)]
-#[instruction(index: u8)]
+#[instruction(index: u16)]
 pub struct Initialize<'info> {
     // 1. Who pays and signs?
     #[account(mut)]
@@ -60,8 +60,8 @@ pub struct Initialize<'info> {
     #[account(init, associated_token::mint = lp_mint, associated_token::authority = creator, payer = creator)]
     pub creator_lp: Account<'info, TokenAccount>,
 
-    /// CHECK: This is not dangerous because we don't read or write from this account
-    #[account(mut)]
+    /// CHECK: Normal Sol Wallet Account
+    #[account(mut, address = amm_config.fund_owner @ ErrorCode::InvalidFeeReceiver)]
     pub fee_receiver: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,
@@ -71,11 +71,15 @@ pub struct Initialize<'info> {
 
 pub fn initialize(
     ctx: Context<Initialize>,
-    index: u8,
+    _index: u16,
     init_amount_0: u64,
     init_amount_1: u64,
     open_time: u64,
 ) -> Result<()> {
+
+    require!(init_amount_0 > 0, ErrorCode::InvalidTokenAmount);
+    require!(init_amount_1 > 0, ErrorCode::InvalidTokenAmount);
+
     let amm_config = &ctx.accounts.amm_config;
     require!(
         !amm_config.disable_create_pool,

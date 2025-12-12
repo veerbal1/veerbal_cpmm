@@ -55,4 +55,7 @@ pub enum ErrorCode {
 
     #[msg("Constant product invariant violated")]
     ConstantProductInvariant,
+
+    #[msg("Invalid Fee Receiver")]
+    InvalidFeeReceiver,
 }
