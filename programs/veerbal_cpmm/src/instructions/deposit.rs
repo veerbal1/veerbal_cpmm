@@ -77,10 +77,14 @@ pub fn deposit(
     require!(pool_state.lp_supply > 0, ErrorCode::PoolNotInitialized);
 
     let lp_supply = pool_state.lp_supply;
-    let token_0_vault = &ctx.accounts.token_0_vault;
-    let token_1_vault = &ctx.accounts.token_1_vault;
+
+    let (clean_vault_0, clean_vault_1) = pool_state.vault_amount_without_fee(
+        ctx.accounts.token_0_vault.amount,
+        ctx.accounts.token_1_vault.amount,
+    )?;
+
     let num = (lp_amount as u128)
-        .checked_mul(token_0_vault.amount as u128)
+        .checked_mul(clean_vault_0 as u128)
         .ok_or(ErrorCode::MathOverflow)?;
     let token_0_amount = num
         .div_ceil(lp_supply as u128)
@@ -88,12 +92,15 @@ pub fn deposit(
         .map_err(|_| ErrorCode::MathOverflow)?;
 
     let num = (lp_amount as u128)
-        .checked_mul(token_1_vault.amount as u128)
+        .checked_mul(clean_vault_1 as u128)
         .ok_or(ErrorCode::MathOverflow)?;
     let token_1_amount = num
         .div_ceil(lp_supply as u128)
         .try_into()
         .map_err(|_| ErrorCode::MathOverflow)?;
+
+    require!(token_0_amount > 0, ErrorCode::ZeroTradingTokens);
+    require!(token_1_amount > 0, ErrorCode::ZeroTradingTokens);
 
     require!(
         token_0_amount <= maximum_token_0_amount,
