@@ -9,7 +9,7 @@ pub mod instructions;
 pub mod states;
 
 declare_id!("C6TCz92bpYjWgty9mwrAoNh7u6RSdmyBRB4dMoBGgMrA");
-pub const ADMIN: Pubkey = pubkey!("C6TCz92bpYjWgty9mwrAoNh7u6RSdmyBRB4dMoBGgMrA");
+pub const ADMIN: Pubkey = pubkey!("5Aq2DiJEAAaUZmkeV4pe1PSbR8VU42A1j7DjP7pvUDrg");
 
 #[program]
 pub mod veerbal_cpmm {
