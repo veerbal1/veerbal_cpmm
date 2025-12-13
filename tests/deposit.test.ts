@@ -161,7 +161,7 @@ describe("deposit", () => {
     
     // Wait for open_time to pass (pool sets open_time = block_timestamp + 1)
     console.log("Waiting for pool to open...");
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
   });
 
   it("deposits liquidity and receives LP tokens", async () => {
