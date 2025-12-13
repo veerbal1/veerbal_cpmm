@@ -1,8 +1,7 @@
 use crate::{
     constants::{AUTH_SEED, POOL_SEED, VAULT_SEED},
     error::ErrorCode,
-    states::PoolState,
-    AmmConfig,
+    states::PoolState
 };
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
@@ -39,10 +38,58 @@ pub struct CollectCreatorFee<'info> {
 
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
-    pub system_program: Program<'info, System>
+    pub system_program: Program<'info, System>,
 }
 
 pub fn collect_creator_fee(ctx: Context<CollectCreatorFee>) -> Result<()> {
-    // TODO: Logic here
+    let pool_state = &mut ctx.accounts.pool_state;
+
+    let fee_0 = pool_state.creator_token_0_fee;
+    let fee_1 = pool_state.creator_token_1_fee;
+
+    require!(fee_0 > 0 || fee_1 > 0, ErrorCode::CreatorFeeNotAccumulated);
+
+    let seeds = &[AUTH_SEED, &[pool_state.auth_bump]];
+    let signer_seeds = &[&seeds[..]];
+
+    if fee_0 > 0 {
+        let accounts = Transfer {
+            from: ctx.accounts.token_0_vault.to_account_info(),
+            to: ctx.accounts.receiver_token_0_account.to_account_info(),
+            authority: ctx.accounts.authority.to_account_info(),
+        };
+
+        let cpi_context = CpiContext::new_with_signer(
+            ctx.accounts.token_program.to_account_info(),
+            accounts,
+            signer_seeds,
+        );
+
+        token::transfer(cpi_context, fee_0)?
+    }
+
+    // 5. Transfer token_1 fees (if any)
+    if fee_1 > 0 {
+        let accounts = Transfer {
+            from: ctx.accounts.token_1_vault.to_account_info(),
+            to: ctx.accounts.receiver_token_1_account.to_account_info(),
+            authority: ctx.accounts.authority.to_account_info(),
+        };
+
+        let cpi_context = CpiContext::new_with_signer(
+            ctx.accounts.token_program.to_account_info(),
+            accounts,
+            signer_seeds,
+        );
+
+        token::transfer(cpi_context, fee_1)?
+    }
+
+    // 6. Reset fee counters
+    pool_state.creator_token_0_fee = 0;
+    pool_state.creator_token_1_fee = 0;
+
+    // 7. Update recent_epoch
+    pool_state.recent_epoch = Clock::get()?.epoch;
     Ok(())
 }

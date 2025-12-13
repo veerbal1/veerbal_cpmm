@@ -53,7 +53,12 @@ pub mod veerbal_cpmm {
         maximum_token_0_amount: u64,
         maximum_token_1_amount: u64,
     ) -> Result<()> {
-        instructions::deposit(ctx, lp_amount, maximum_token_0_amount, maximum_token_1_amount)?;
+        instructions::deposit(
+            ctx,
+            lp_amount,
+            maximum_token_0_amount,
+            maximum_token_1_amount,
+        )?;
         Ok(())
     }
 
@@ -63,15 +68,16 @@ pub mod veerbal_cpmm {
         minimum_token_0_amount: u64,
         minimum_token_1_amount: u64,
     ) -> Result<()> {
-        instructions::withdraw(ctx, lp_amount, minimum_token_0_amount, minimum_token_1_amount)?;
+        instructions::withdraw(
+            ctx,
+            lp_amount,
+            minimum_token_0_amount,
+            minimum_token_1_amount,
+        )?;
         Ok(())
     }
 
-    pub fn swap(
-        ctx: Context<Swap>,
-        amount_in: u64,
-        minimum_amount_out: u64,
-    ) -> Result<()> {
+    pub fn swap(ctx: Context<Swap>, amount_in: u64, minimum_amount_out: u64) -> Result<()> {
         instructions::swap(ctx, amount_in, minimum_amount_out)?;
         Ok(())
     }
@@ -82,6 +88,11 @@ pub mod veerbal_cpmm {
         maximum_amount_in: u64,
     ) -> Result<()> {
         instructions::swap_base_output(ctx, amount_out, maximum_amount_in)?;
+        Ok(())
+    }
+
+    pub fn collect_creator_fee(ctx: Context<CollectCreatorFee>) -> Result<()> {
+        instructions::collect_creator_fee(ctx)?;
         Ok(())
     }
 }
