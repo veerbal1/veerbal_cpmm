@@ -140,9 +140,9 @@ pub fn swap_base_output(
             .ok_or(ErrorCode::MathOverflow)?;
     }
     // k verification: constant AFTER
-    let actual_input = amount_in.checked_sub(fee).ok_or(ErrorCode::MathOverflow)?;
+    // Use input_without_fee (the pure swap amount that affects liquidity)
     let new_input_balance = input_vault_balance
-        .checked_add(actual_input)
+        .checked_add(input_without_fee)
         .ok_or(ErrorCode::MathOverflow)?;
     let new_output_balance = output_vault_balance
         .checked_sub(amount_out as u128)
