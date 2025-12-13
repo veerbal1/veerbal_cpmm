@@ -15,3 +15,6 @@ pub use swap_base_input::*;
 
 pub mod swap_base_output;
 pub use swap_base_output::*;
+
+pub mod collect_creator_fee;
+pub use collect_creator_fee::*;

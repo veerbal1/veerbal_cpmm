@@ -116,14 +116,14 @@ pub fn create_pool(
 
     // Just calculate intial LP tokens to mint
     let product = (init_amount_0 as u128) * (init_amount_1 as u128);
-    let intitial_lp_liquidity = product.isqrt() as u64;
+    let initial_lp_liquidity = product.isqrt() as u64;
 
     require!(
-        intitial_lp_liquidity > 100,
+        initial_lp_liquidity > 100,
         ErrorCode::InsufficientTokensToMint
     );
 
-    let creator_lp_amount = intitial_lp_liquidity - 100;
+    let creator_lp_amount = initial_lp_liquidity - 100;
 
     let seeds = &[AUTH_SEED, &[ctx.bumps.authority]];
     let signer_seeds = &[&seeds[..]];
@@ -172,7 +172,7 @@ pub fn create_pool(
     pool_state.open_time = open_time;
     pool_state.recent_epoch = Clock::get()?.epoch;
 
-    pool_state.lp_supply = intitial_lp_liquidity;
+    pool_state.lp_supply = initial_lp_liquidity;
 
     pool_state.mint_0_decimals = ctx.accounts.token_0_mint.decimals;
     pool_state.mint_1_decimals = ctx.accounts.token_1_mint.decimals;
