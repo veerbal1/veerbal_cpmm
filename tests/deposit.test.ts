@@ -37,7 +37,8 @@ describe("deposit", () => {
   let creatorToken0Ata: PublicKey;
   let creatorToken1Ata: PublicKey;
   let creatorLpAta: PublicKey;
-  const configIndex = 2; // Different index from other tests
+  // Unique index per run (for devnet compatibility)
+  const configIndex = (Math.floor(Date.now() / 1000) + 2000) % 65535;
 
   before(async () => {
     // 1. Create config

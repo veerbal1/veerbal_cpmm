@@ -35,7 +35,8 @@ describe("collect-fees", () => {
   let authorityPda: PublicKey;
   let userToken0Ata: PublicKey;
   let userToken1Ata: PublicKey;
-  const configIndex = 5; // Different index from other tests
+  // Unique index per run (for devnet compatibility)
+  const configIndex = (Math.floor(Date.now() / 1000) + 5000) % 65535;
 
   before(async () => {
     // 1. Create config - owner is protocol_owner and fund_owner

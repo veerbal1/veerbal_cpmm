@@ -37,7 +37,8 @@ describe("withdraw", () => {
   let creatorToken0Ata: PublicKey;
   let creatorToken1Ata: PublicKey;
   let creatorLpAta: PublicKey;
-  const configIndex = 3; // Different index from other tests
+  // Unique index per run (for devnet compatibility)
+  const configIndex = (Math.floor(Date.now() / 1000) + 3000) % 65535;
 
   before(async () => {
     // 1. Create config

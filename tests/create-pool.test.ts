@@ -23,7 +23,8 @@ describe("create_pool", () => {
   const owner = anchor.Wallet.local().payer;
 
   let configPDA: PublicKey;
-  const configIndex = 1;
+  // Unique index per run (for devnet compatibility)
+  const configIndex = (Math.floor(Date.now() / 1000) + 1000) % 65535;
   let token0Mint: PublicKey;
   let token1Mint: PublicKey;
 

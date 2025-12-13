@@ -34,7 +34,8 @@ describe("swap", () => {
   let authorityPda: PublicKey;
   let userToken0Ata: PublicKey;
   let userToken1Ata: PublicKey;
-  const configIndex = 4; // Different index from other tests
+  // Unique index per run (for devnet compatibility)
+  const configIndex = (Math.floor(Date.now() / 1000) + 4000) % 65535;
 
   before(async () => {
     // 1. Create config
