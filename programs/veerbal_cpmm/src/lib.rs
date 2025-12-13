@@ -92,7 +92,12 @@ pub mod veerbal_cpmm {
     }
 
     pub fn collect_creator_fee(ctx: Context<CollectCreatorFee>) -> Result<()> {
-        instructions::collect_creator_fee(ctx)?;
-        Ok(())
+        instructions::collect_creator_fee(ctx)
+    }
+    pub fn collect_protocol_fee(ctx: Context<CollectProtocolFee>) -> Result<()> {
+        instructions::collect_protocol_fee(ctx)
+    }
+    pub fn collect_fund_fee(ctx: Context<CollectFundFee>) -> Result<()> {
+        instructions::collect_fund_fee(ctx)
     }
 }
