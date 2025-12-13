@@ -20,7 +20,7 @@ pub struct CreatePool<'info> {
     pub creator: Signer<'info>,
 
     // 2. Which config does this pool use?
-    #[account(seeds=[CONFIG_SEED,index.to_be_bytes().as_ref()], bump = amm_config.bump)]
+    #[account(seeds=[CONFIG_SEED, index.to_be_bytes().as_ref()], bump = amm_config.bump)]
     pub amm_config: Box<Account<'info, AmmConfig>>,
 
     // 3. The pool state we're creating (what seeds?)
