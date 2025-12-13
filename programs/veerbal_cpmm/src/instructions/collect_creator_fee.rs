@@ -47,7 +47,7 @@ pub fn collect_creator_fee(ctx: Context<CollectCreatorFee>) -> Result<()> {
     let fee_0 = pool_state.creator_token_0_fee;
     let fee_1 = pool_state.creator_token_1_fee;
 
-    require!(fee_0 > 0 || fee_1 > 0, ErrorCode::CreatorFeeNotAccumulated);
+    require!(fee_0 > 0 || fee_1 > 0, ErrorCode::NoFeesToCollect);
 
     let seeds = &[AUTH_SEED, &[pool_state.auth_bump]];
     let signer_seeds = &[&seeds[..]];

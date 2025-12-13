@@ -59,6 +59,6 @@ pub enum ErrorCode {
     #[msg("Invalid Fee Receiver")]
     InvalidFeeReceiver,
 
-    #[msg("Creator Fee Not Accumulated")]
-    CreatorFeeNotAccumulated
+    #[msg("No Fee to collect")]
+    NoFeesToCollect
 }
